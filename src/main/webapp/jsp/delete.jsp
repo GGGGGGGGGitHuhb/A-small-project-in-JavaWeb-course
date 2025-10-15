@@ -7,11 +7,25 @@
 <body>
 <h2>按条件删除学生</h2>
 <form method="post" action="delete.jsp">
-  姓名：<input type="text" name="name"><br>
-  性别：<input type="text" name="gender"><br>
-  年龄：<input type="number" name="age"><br>
+  <label for="name">姓名：</label>
+  <input type="text" id="name" name="name"><br>
+
+  <label for="gender">性别：</label>
+  <input type="text" id="gender" name="gender"><br>
+
+  <label for="age">年龄：</label>
+  <input type="number" id="age" name="age"><br>
+
+  <label for="weight">体重(kg)：</label>
+  <input type="number" id="weight" name="weight" step="0.1"><br>
+
+  <label for="height">身高(cm)：</label>
+  <input type="number" id="height" name="height" step="0.1"><br>
+
   <input type="submit" value="删除">
 </form>
+
+<%--todo: 删除前显示要删除的记录并询问用户确定与否--%>
 
 <%
   request.setCharacterEncoding("utf-8");
@@ -27,8 +41,8 @@
 
     StudentDAO dao = new StudentDAO();
     boolean ok = dao.delStudent(stu);
-    if (ok) System.out.println("<p style='color:green;'>删除成功！</p>");
-    else System.out.println("<p style='color:red;'>删除失败。</p>");
+    if (ok) System.out.println("删除成功");
+    else System.out.println("删除失败");
   }
 %>
 </body>

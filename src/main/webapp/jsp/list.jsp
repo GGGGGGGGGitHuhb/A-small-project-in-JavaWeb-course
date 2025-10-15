@@ -13,8 +13,8 @@
 <h2>所有学生信息</h2>
 
 <%
-  StudentDAO dao = new StudentDAO();
-  List<Map<String, Object>> list = dao.getALLStudents();
+    StudentDAO dao = new StudentDAO();
+    List<Map<String, Object>> list = dao.getAllStudents();
 %>
 
 <table>
@@ -33,6 +33,11 @@
     <td><%= stu.get("height") %></td>
   </tr>
   <%
+      if (stu.get("name") != null) {
+        System.out.println("name 不为空");
+      } else {
+        System.out.println("name 为空");
+      }
     }
   %>
 </table>

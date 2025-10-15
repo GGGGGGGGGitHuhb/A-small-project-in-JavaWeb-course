@@ -1,7 +1,6 @@
 package entity;
 
 public class Student {
-    // int 和 Integer 有什么区别
     private Integer id;
     private String name;
     private String gender;
