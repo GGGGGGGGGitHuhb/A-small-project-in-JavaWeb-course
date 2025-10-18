@@ -6,6 +6,7 @@ import model.Student;
 
 public interface StudentService {
     List<Student> getAllStudents();
+    Student getStudentsById(int recordeId);
     List<Student> getStudentsByConditions(Student stu);
     boolean addStudent(Student stu);
     boolean updateStudent(Student stu);

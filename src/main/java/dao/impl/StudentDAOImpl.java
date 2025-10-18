@@ -24,25 +24,25 @@ public class StudentDAOImpl implements StudentDAO {
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                getOneRow(list, rs);
+                list.add(getOneRow(rs));
             }
             return list;
         }
     }
 
     @Override
-    public List<Student> selectById(int id) throws SQLException {
-        List<Student> list = new ArrayList<>();
+    public Student selectById(int id) throws SQLException {
         String sql = "SELECT * FROM stu_info WHERE id = ?";
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
-            while (rs.next()) {
-                getOneRow(list, rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return getOneRow(rs);
+                }
             }
-            return list;
         }
+        return null;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class StudentDAOImpl implements StudentDAO {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                getOneRow(list, rs);
+                list.add(getOneRow(rs));
             }
             return list;
         }
@@ -90,7 +90,7 @@ public class StudentDAOImpl implements StudentDAO {
         }
     }
 
-    public int update(Student stu) throws SQLException {
+    public boolean update(Student stu) throws SQLException {
         try (Connection conn = DBUtil.getConnection()) {
             UpdateResult ur = buildUpdateFields(stu);
             List<String> updates = ur.getUpdates();
@@ -108,17 +108,15 @@ public class StudentDAOImpl implements StudentDAO {
         }
     }
 
-    private void getOneRow(List<Student> list, ResultSet rs) throws SQLException {
+    private Student getOneRow(ResultSet rs) throws SQLException {
         Student stu = new Student();
-
         stu.setId(rs.getInt("id"));
         stu.setName(rs.getString("name"));
         stu.setGender(rs.getString("gender"));
         stu.setAge(rs.getInt("age"));
         stu.setWeight(rs.getDouble("weight"));
         stu.setHeight(rs.getDouble("height"));
-
-        list.add(stu);
+        return stu;
     }
     
     private UpdateResult buildUpdateFields(Student stu) {
