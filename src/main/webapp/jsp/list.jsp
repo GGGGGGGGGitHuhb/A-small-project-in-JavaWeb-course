@@ -14,7 +14,12 @@
 
 <%
     StudentDAO dao = new StudentDAO();
-    List<Map<String, Object>> list = dao.selectAll();
+  List<Map<String, Object>> list = null;
+  try {
+    list = dao.selectAll();
+  } catch (java.sql.SQLException throwables) {
+    throw new RuntimeException(throwables);
+  }
 %>
 
 <table>

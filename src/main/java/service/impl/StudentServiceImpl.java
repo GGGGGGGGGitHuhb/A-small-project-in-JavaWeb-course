@@ -25,7 +25,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> getAllStudents() {
-        return dao.selectAll();
+        try {
+            return dao.selectAll();
+        } catch (java.sql.SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
     }
 
     /**
@@ -36,16 +40,24 @@ public class StudentServiceImpl implements StudentService {
      */
     @Override
     public List<Student> getStudentsByConditions(Student stu) {
-        return dao.selectByConditions(stu);
+        try {
+            return dao.selectByConditions(stu);
+        } catch (java.sql.SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
     }
 
     @Override
-    public boolean addStudents(Student stu) {
+    public boolean addStudent(Student stu) {
         // 至少需要有姓名
         if (stu.getName() == null || stu.getName().isEmpty()) {
             return false;
         }
-        return dao.insert(stu) > 0;
+        try {
+            return dao.insert(stu) > 0;
+        } catch (java.sql.SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
     }
 
     /**
@@ -54,16 +66,24 @@ public class StudentServiceImpl implements StudentService {
      * @return
      */
     @Override
-    public boolean updateStudents(Student stu) {
+    public boolean updateStudent(Student stu) {
         return false;
     }
 
     @Override
-    public int deleteStudents(int recordId) {
+    public int deleteStudent(int recordId) {
         // 判断存在性
-        if (dao.selectById(recordId) == null) {
-            return NOTEXISTERROR;
+        try {
+            if (dao.selectById(recordId) == null) {
+                return NOTEXISTERROR;
+            }
+        } catch (java.sql.SQLException throwables) {
+            throw new RuntimeException(throwables);
         }
-        return dao.delete(recordId);
+        try {
+            return dao.delete(recordId);
+        } catch (java.sql.SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
     }
 }

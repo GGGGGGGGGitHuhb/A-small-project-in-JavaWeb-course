@@ -60,7 +60,12 @@
     // 至少有一项被设置
     if (stu.getName() != null || stu.getGender() != null || stu.getAge() != null && stu.getAge() >= 0 || stu.getWeight() != null && stu.getWeight() >= 0 || stu.getHeight() != null && stu.getHeight() >= 0) {
       StudentDAO dao = new StudentDAO();
-      List<Map<String, Object>> list = dao.selectByConditions(stu);
+      List<Map<String, Object>> list = null;
+      try {
+        list = dao.selectByConditions(stu);
+      } catch (java.sql.SQLException throwables) {
+        throw new RuntimeException(throwables);
+      }
 
       if (list.isEmpty()) {
         System.out.println("未查询到结果");

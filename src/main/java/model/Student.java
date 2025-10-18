@@ -8,8 +8,9 @@ public class Student {
     private Double weight;
     private Double height;
 
-    public Student(Integer id, String name, String gender, Integer age, Double weight, Double height) {
-        this.id = id;
+    public Student() {}
+
+    public Student(String name, String gender, Integer age, Double weight, Double height) {
         this.name = name;
         this.gender = gender;
         this.age = age;

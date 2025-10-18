@@ -44,8 +44,17 @@
     if (heightStr != null && !heightStr.isEmpty()) stu.setHeight(Double.parseDouble(heightStr));
 
     StudentDAO dao = new StudentDAO();
-    int id = dao.selectByConditions(stu);
-    boolean ok = dao.delete(stu);
+    try {
+      int id = dao.selectByConditions(stu);
+    } catch (java.sql.SQLException throwables) {
+      throw new RuntimeException(throwables);
+    }
+    boolean ok = false;
+    try {
+      ok = dao.delete(stu);
+    } catch (java.sql.SQLException throwables) {
+      throw new RuntimeException(throwables);
+    }
     if (ok) System.out.println("删除成功");
     else System.out.println("删除失败");
   }

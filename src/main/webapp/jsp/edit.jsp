@@ -44,7 +44,12 @@
     if (heightStr != null && !heightStr.isEmpty()) stu.setHeight(Double.parseDouble(heightStr));
 
     StudentDAO dao = new StudentDAO();
-    boolean ok = dao.update(stu);
+    boolean ok = false;
+    try {
+      ok = dao.update(stu);
+    } catch (java.sql.SQLException throwables) {
+      throw new RuntimeException(throwables);
+    }
 
     if (ok) System.out.println("修改成功");
     else System.out.println("修改失败");

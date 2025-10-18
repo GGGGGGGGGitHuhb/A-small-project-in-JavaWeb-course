@@ -43,7 +43,12 @@
     stu.setHeight(height);
 
     StudentDAO dao = new StudentDAO();
-    boolean ok = dao.insert(stu);
+    boolean ok = false;
+    try {
+      ok = dao.insert(stu);
+    } catch (java.sql.SQLException throwables) {
+      throw new RuntimeException(throwables);
+    }
 
     if (ok) {
         System.out.println("添加成功");
