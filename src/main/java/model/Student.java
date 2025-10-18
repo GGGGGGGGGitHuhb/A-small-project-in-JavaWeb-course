@@ -1,4 +1,4 @@
-package entity;
+package model;
 
 public class Student {
     private Integer id;
@@ -7,6 +7,15 @@ public class Student {
     private Integer age;
     private Double weight;
     private Double height;
+
+    public Student(Integer id, String name, String gender, Integer age, Double weight, Double height) {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.weight = weight;
+        this.height = height;
+    }
 
     public Integer getId() {
         return id;

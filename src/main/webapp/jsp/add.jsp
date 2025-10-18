@@ -1,4 +1,4 @@
-<%@ page import="dao.StudentDAO" %>
+<%@ page import="dao.StudentDAO, model.Student" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
@@ -10,7 +10,7 @@
   <label for="name">姓名：</label>
   <input type="text" id="name" name="name"><br>
 
-  <label for="gender">性别：</label>
+  <label for="gender">性别(M或F)：</label>
   <input type="text" id="gender" name="gender"><br>
 
   <label for="age">年龄：</label>
@@ -25,20 +25,25 @@
   <input type="submit" value="添加">
 </form>
 
-<%--todo: 性别输入只能是M或F，没有用户提示--%>
-
 <%
   request.setCharacterEncoding("utf-8");
   String name = request.getParameter("name");
   // 必须至少要有名字才允许添加记录
   if (name != null && !name.isEmpty()) {
+    Student stu = new Student();
     String gender = request.getParameter("gender");
     int age = Integer.parseInt(request.getParameter("age"));
     double weight = Double.parseDouble(request.getParameter("weight"));
     double height = Double.parseDouble(request.getParameter("height"));
 
+    stu.setName(name);
+    stu.setGender(gender);
+    stu.setAge(age);
+    stu.setWeight(weight);
+    stu.setHeight(height);
+
     StudentDAO dao = new StudentDAO();
-    boolean ok = dao.addStudent(name, gender, age, weight, height);
+    boolean ok = dao.insert(stu);
 
     if (ok) {
         System.out.println("添加成功");

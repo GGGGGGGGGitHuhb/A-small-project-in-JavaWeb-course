@@ -1,4 +1,4 @@
-<%@ page import="dao.StudentDAO, entity.Student" %>
+<%@ page import="dao.StudentDAO, model.Student" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
@@ -10,7 +10,7 @@
   <label for="name">姓名：</label>
   <input type="text" id="name" name="name"><br>
 
-  <label for="gender">性别：</label>
+  <label for="gender">性别(M或F)：</label>
   <input type="text" id="gender" name="gender"><br>
 
   <label for="age">年龄：</label>
@@ -32,15 +32,20 @@
   String name = request.getParameter("name");
   String gender = request.getParameter("gender");
   String ageStr = request.getParameter("age");
+  String weightStr = request.getParameter("weight");
+  String heightStr = request.getParameter("height");
 
-  if (name != null || gender != null || ageStr != null) {
+  if (name != null || gender != null || ageStr != null || weightStr != null || heightStr != null) {
     Student stu = new Student();
     if (name != null && !name.isEmpty()) stu.setName(name);
     if (gender != null && !gender.isEmpty()) stu.setGender(gender);
     if (ageStr != null && !ageStr.isEmpty()) stu.setAge(Integer.parseInt(ageStr));
+    if (weightStr != null && !weightStr.isEmpty()) stu.setWeight(Double.parseDouble(weightStr));
+    if (heightStr != null && !heightStr.isEmpty()) stu.setHeight(Double.parseDouble(heightStr));
 
     StudentDAO dao = new StudentDAO();
-    boolean ok = dao.delStudent(stu);
+    int id = dao.selectByConditions(stu);
+    boolean ok = dao.delete(stu);
     if (ok) System.out.println("删除成功");
     else System.out.println("删除失败");
   }

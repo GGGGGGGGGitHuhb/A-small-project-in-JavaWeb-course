@@ -1,4 +1,4 @@
-<%@ page import="dao.StudentDAO, entity.Student" %>
+<%@ page import="dao.StudentDAO, model.Student" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
@@ -44,7 +44,7 @@
     if (heightStr != null && !heightStr.isEmpty()) stu.setHeight(Double.parseDouble(heightStr));
 
     StudentDAO dao = new StudentDAO();
-    boolean ok = dao.updateStudent(stu);
+    boolean ok = dao.update(stu);
 
     if (ok) System.out.println("修改成功");
     else System.out.println("修改失败");

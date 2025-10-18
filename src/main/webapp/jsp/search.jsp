@@ -1,4 +1,4 @@
-<%@ page import="dao.StudentDAO, entity.Student, java.util.*" %>
+<%@ page import="dao.StudentDAO, model.Student, java.util.*" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
@@ -58,9 +58,9 @@
     }
 
     // 至少有一项被设置
-    if (stu.getName() != null || stu.getGender() != null || stu.getAge() != null && stu.getAge() > 0 || stu.getWeight() != null && stu.getWeight() > 0 || stu.getHeight() != null && stu.getHeight() > 0) {
+    if (stu.getName() != null || stu.getGender() != null || stu.getAge() != null && stu.getAge() >= 0 || stu.getWeight() != null && stu.getWeight() >= 0 || stu.getHeight() != null && stu.getHeight() >= 0) {
       StudentDAO dao = new StudentDAO();
-      List<Map<String, Object>> list = dao.getStudents(stu);
+      List<Map<String, Object>> list = dao.selectByConditions(stu);
 
       if (list.isEmpty()) {
         System.out.println("未查询到结果");
