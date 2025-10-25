@@ -1,108 +1,45 @@
-<%@ page import="dao.StudentDAO, model.Student, java.util.*" %>
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
 <html>
 <head>
   <title>查询学生</title>
 </head>
+<style>
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #f4f4f4; }
+</style>
 <body>
-<h2>按条件查询学生</h2>
-<form method="get" action="search.jsp">
-  <label for="name">姓名：</label>
-  <input type="text" id="name" name="name"><br>
+<h2>查询学生</h2>
 
-  <label for="gender">性别：</label>
-  <input type="text" id="gender" name="gender"><br>
+<form method="get" action="<c:url value='/students'/>">
+  <input type="hidden" name="action" value="search">
 
-  <label for="age">年龄：</label>
-  <input type="number" id="age" name="age"><br>
-
-  <label for="weight">体重(kg)：</label>
-  <input type="number" id="weight" name="weight" step="0.1"><br>
-
-  <label for="height">身高(cm)：</label>
-  <input type="number" id="height" name="height" step="0.1"><br>
-
+  <label for="id">ID：</label>
+  <input type="text" id="id" name="id"><br>
   <input type="submit" value="查询">
 </form>
 
-<%--todo: 连续查找时上一次记录仍然显示--%>
+<c:if test="${not empty student}">
+  <table class="student-table">
+    <tr>
+      <th>ID</th><th>姓名</th><th>性别</th><th>年龄</th><th>体重</th><th>身高</th>
+    </tr>
+    <tr>
+      <td>${student.id}</td>
+      <td>${student.name}</td>
+      <td>${student.gender}</td>
+      <td>${student.age}</td>
+      <td>${student.weight}</td>
+      <td>${student.height}</td>
+    </tr>
+  </table>
+</c:if>
 
-<%
-    String name = request.getParameter("name");
-    String gender = request.getParameter("gender");
-    String ageStr = request.getParameter("age");
-    String weightStr = request.getParameter("weight");
-    String heightStr = request.getParameter("height");
-
-    // 字符串直接处理，数字需要判断合法性
-    Student stu = new Student();
-
-    if (name != null && !name.isEmpty()) stu.setName(name);
-    if (gender != null && !gender.isEmpty()) stu.setGender(gender);
-
-    try {
-        if (ageStr != null && !ageStr.isEmpty()) {
-          int age = Integer.parseInt(ageStr);
-          stu.setAge(age);
-        }
-        if (weightStr != null && !weightStr.isEmpty()) {
-          double weight = Double.parseDouble(weightStr);
-          stu.setWeight(weight);
-        }
-        if (heightStr != null && !heightStr.isEmpty()) {
-          double height = Double.parseDouble(heightStr);
-          stu.setHeight(height);
-        }
-    } catch (NumberFormatException e) {
-      System.out.println("参数非法：" + e.getMessage());
-    }
-
-    // 至少有一项被设置
-    if (stu.getName() != null || stu.getGender() != null || stu.getAge() != null && stu.getAge() >= 0 || stu.getWeight() != null && stu.getWeight() >= 0 || stu.getHeight() != null && stu.getHeight() >= 0) {
-      StudentDAO dao = new StudentDAO();
-      List<Map<String, Object>> list = null;
-      try {
-        list = dao.selectByConditions(stu);
-      } catch (java.sql.SQLException throwables) {
-        throw new RuntimeException(throwables);
-      }
-
-      if (list.isEmpty()) {
-        System.out.println("未查询到结果");
-      } else {
-%>
-
-<table class="student-table">
-  <tr>
-    <th>ID</th>
-    <th>姓名</th>
-    <th>性别</th>
-    <th>年龄</th>
-    <th>体重</th>
-    <th>身高</th>
-  </tr>
-
-  <%
-    for (Map<String, Object> row : list) {
-  %>
-  <tr>
-    <td><%= row.get("id") %></td>
-    <td><%= row.get("name") %></td>
-    <td><%= row.get("gender") %></td>
-    <td><%= row.get("age") %></td>
-    <td><%= row.get("weight") %></td>
-    <td><%= row.get("height") %></td>
-  </tr>
-  <%
-    }
-  %>
-
-</table>
-
-<%
-    }
-  }
-%>
+<c:if test="${empty student}">
+  <p>无结果</p>
+</c:if>
 
 </body>
 </html>

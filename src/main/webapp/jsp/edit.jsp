@@ -1,12 +1,17 @@
 <%@ page import="dao.StudentDAO, model.Student" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
+
 <html>
 <head>
   <title>修改学生</title>
 </head>
 <body>
 <h2>修改学生信息</h2>
-<form method="post" action="edit.jsp">
+<form method="post" action="<c:url value='/students'/>">
+  <input type="hidden" name="action" value="update">
+
   <label for="name">姓名：</label>
   <input type="text" id="name" name="name"><br>
 
@@ -25,35 +30,9 @@
   <input type="submit" value="修改">
 </form>
 
-<%
-  request.setCharacterEncoding("utf-8");
-  String idStr = request.getParameter("id");
-  if (idStr != null && !idStr.isEmpty()) {
-    Student stu = new Student();
-    stu.setId(Integer.parseInt(idStr));
-    String name = request.getParameter("name");
-    String gender = request.getParameter("gender");
-    String ageStr = request.getParameter("age");
-    String weightStr = request.getParameter("weight");
-    String heightStr = request.getParameter("height");
+<c:if test="${not empty error}">
+  <p>${error}</p>
+</c:if>
 
-    if (name != null && !name.isEmpty()) stu.setName(name);
-    if (gender != null && !gender.isEmpty()) stu.setGender(gender);
-    if (ageStr != null && !ageStr.isEmpty()) stu.setAge(Integer.parseInt(ageStr));
-    if (weightStr != null && !weightStr.isEmpty()) stu.setWeight(Double.parseDouble(weightStr));
-    if (heightStr != null && !heightStr.isEmpty()) stu.setHeight(Double.parseDouble(heightStr));
-
-    StudentDAO dao = new StudentDAO();
-    boolean ok = false;
-    try {
-      ok = dao.update(stu);
-    } catch (java.sql.SQLException throwables) {
-      throw new RuntimeException(throwables);
-    }
-
-    if (ok) System.out.println("修改成功");
-    else System.out.println("修改失败");
-  }
-%>
 </body>
 </html>

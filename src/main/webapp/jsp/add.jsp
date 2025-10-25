@@ -1,12 +1,17 @@
 <%@ page import="dao.StudentDAO, model.Student" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
+
 <html>
 <head>
   <title>添加学生</title>
 </head>
 <body>
 <h2>添加学生</h2>
-<form method="post" action="add.jsp">
+<form method="post" action="<c:url value='/students'/>">
+  <input type="hidden" name="action" value="add">
+
   <label for="name">姓名：</label>
   <input type="text" id="name" name="name"><br>
 
@@ -25,37 +30,9 @@
   <input type="submit" value="添加">
 </form>
 
-<%
-  request.setCharacterEncoding("utf-8");
-  String name = request.getParameter("name");
-  // 必须至少要有名字才允许添加记录
-  if (name != null && !name.isEmpty()) {
-    Student stu = new Student();
-    String gender = request.getParameter("gender");
-    int age = Integer.parseInt(request.getParameter("age"));
-    double weight = Double.parseDouble(request.getParameter("weight"));
-    double height = Double.parseDouble(request.getParameter("height"));
+<c:if test="${not empty error}">
+  <p>${error}</p>
+</c:if>
 
-    stu.setName(name);
-    stu.setGender(gender);
-    stu.setAge(age);
-    stu.setWeight(weight);
-    stu.setHeight(height);
-
-    StudentDAO dao = new StudentDAO();
-    boolean ok = false;
-    try {
-      ok = dao.insert(stu);
-    } catch (java.sql.SQLException throwables) {
-      throw new RuntimeException(throwables);
-    }
-
-    if (ok) {
-        System.out.println("添加成功");
-    } else {
-        System.out.println("添加失败");
-    }
-  }
-%>
 </body>
 </html>

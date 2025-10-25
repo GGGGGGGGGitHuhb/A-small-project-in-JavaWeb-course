@@ -12,7 +12,7 @@ import jakarta.servlet.*;
 import service.impl.StudentServiceImpl;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 /**
  * Controller 负责：
@@ -32,7 +32,18 @@ public class StudentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        list(req, resp);
+        req.setCharacterEncoding("UTF-8");
+        String action = req.getParameter("action");
+//        System.out.println("action值: " + action);;
+        if (action == null) {
+            action = "";
+        }
+
+        switch (action) {
+            case "search" -> handleSearch(req, resp);
+            case "list" -> list(req, resp);
+//            default -> list(req, resp);
+        }
     }
 
     @Override
@@ -51,7 +62,24 @@ public class StudentServlet extends HttpServlet {
         }
     }
 
+    private void handleSearch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idStr = req.getParameter("id"); // 根据表单中 name 属性拿 value
+        if (idStr == null || idStr.isEmpty()) {
+            req.setAttribute("error", "搜索失败");
+            req.getRequestDispatcher("/jsp/search.jsp").forward(req, resp);
+        }
+
+        assert idStr != null;
+        int id = Integer.parseInt(idStr);
+        Student result = service.getStudentById(id);
+        req.setAttribute("student", result);
+        req.getRequestDispatcher("/jsp/search.jsp").forward(req, resp);
+    }
+
     private void handleAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // debug
+//        System.out.println("DEBUG: ADD");
+
         // 获取字段数据
         Student stu = extractStudent(req);
 
@@ -100,6 +128,7 @@ public class StudentServlet extends HttpServlet {
     }
 
     private void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        System.out.println("进入list");
         req.setAttribute("students", service.getAllStudents());
         req.getRequestDispatcher("/jsp/list.jsp").forward(req, resp);
     }
