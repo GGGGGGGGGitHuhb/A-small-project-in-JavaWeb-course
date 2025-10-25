@@ -77,7 +77,7 @@ public class StudentDAOImpl implements StudentDAO {
             ps.setInt(3, stu.getAge());
             ps.setDouble(4, stu.getWeight());
             ps.setDouble(5, stu.getHeight());
-            return ps.executeUpdate();
+            return ps.executeUpdate(); // 成功: >= 1 行; 失败: = 0 行; 异常: 抛出
         }
     }
 
@@ -90,7 +90,7 @@ public class StudentDAOImpl implements StudentDAO {
         }
     }
 
-    public boolean update(Student stu) throws SQLException {
+    public int update(Student stu) throws SQLException {
         try (Connection conn = DBUtil.getConnection()) {
             UpdateResult ur = buildUpdateFields(stu);
             List<String> updates = ur.getUpdates();

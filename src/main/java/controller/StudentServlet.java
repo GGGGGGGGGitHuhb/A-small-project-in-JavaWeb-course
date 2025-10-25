@@ -32,14 +32,7 @@ public class StudentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 调用业务层获取数据
-        List<Student> students = service.getAllStudents();
-
-        // 结果存入请求作用域
-        req.setAttribute("students", students); // 这里的 students 是什么
-
-        // 转发到 JSP 页面
-        req.getRequestDispatcher("/jsp/list.jsp").forward(req, resp);
+        list(req, resp);
     }
 
     @Override
@@ -96,9 +89,9 @@ public class StudentServlet extends HttpServlet {
 
     private void handleDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
-        int affectedRows = 0;
-        affectedRows = service.deleteStudent(id);
-        if (affectedRows >= 0) {
+
+        boolean success = service.deleteStudent(id);
+        if (success) {
             resp.sendRedirect(req.getContextPath() + "/students");
         } else {
             req.setAttribute("error", "删除失败");
@@ -122,5 +115,22 @@ public class StudentServlet extends HttpServlet {
 
         // 封装为 Student 对象
         return new Student(name, gender, age, weight, height);
+    }
+
+    // 空值保护
+    private Integer parseIntOrNull(String value) {
+        try {
+            return (value == null || value.isEmpty()) ? null : Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private Double parseIntOrDouble(String value) {
+        try {
+            return (value == null || value.isEmpty()) ? null : Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }
