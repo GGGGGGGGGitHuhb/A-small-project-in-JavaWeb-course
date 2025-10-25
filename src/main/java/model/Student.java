@@ -10,7 +10,8 @@ public class Student {
 
     public Student() {}
 
-    public Student(String name, String gender, Integer age, Double weight, Double height) {
+    public Student(Integer id, String name, String gender, Integer age, Double weight, Double height) {
+        this.id = id;
         this.name = name;
         this.gender = gender;
         this.age = age;

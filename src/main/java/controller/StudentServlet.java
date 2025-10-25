@@ -89,7 +89,7 @@ public class StudentServlet extends HttpServlet {
         // 根据结果跳转页面
         if (success) {
             // 重定向回学生列表
-            resp.sendRedirect(req.getContextPath() + "/students");
+            resp.sendRedirect(req.getContextPath() + "/students?action=list");
         } else {
             // 转发回表单页面并提示
             req.setAttribute("error", "添加失败，请检查输入");
@@ -100,14 +100,15 @@ public class StudentServlet extends HttpServlet {
     private void handleUpdate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 获取字段数据
         Student stu = extractStudent(req);
+//        System.out.println("stu是: " + stu);
 
         // 调用 Service 层修改学生
         boolean success = service.updateStudent(stu);
 
         // 根据结果跳转页面
         if (success) {
-            // 重定向会学生列表
-            resp.sendRedirect(req.getContextPath() + "/students");
+            // 重定向回学生列表
+            resp.sendRedirect(req.getContextPath() + "/students?action=list");
         } else {
             // 转发回表单页面并提示
             req.setAttribute("error", "修改失败");
@@ -120,7 +121,7 @@ public class StudentServlet extends HttpServlet {
 
         boolean success = service.deleteStudent(id);
         if (success) {
-            resp.sendRedirect(req.getContextPath() + "/students");
+            resp.sendRedirect(req.getContextPath() + "/students?action=list");
         } else {
             req.setAttribute("error", "删除失败");
             req.getRequestDispatcher("/jsp/delete.jsp").forward(req, resp);
@@ -129,13 +130,19 @@ public class StudentServlet extends HttpServlet {
 
     private void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        System.out.println("进入list");
-        req.setAttribute("students", service.getAllStudents());
+        List<Student> students = service.getAllStudents();
+        req.setAttribute("students", students);
         req.getRequestDispatcher("/jsp/list.jsp").forward(req, resp);
     }
 
     // 公共方法 取参并封装为对象
     private Student extractStudent(HttpServletRequest req) {
         // 获取字段数据
+        String idStr = req.getParameter("id");
+        Integer id = null;
+        if (idStr != null) {
+            id = Integer.parseInt(idStr);
+        }
         String name = req.getParameter("name");
         String gender = req.getParameter("gender");
         int age = Integer.parseInt(req.getParameter("age"));
@@ -143,7 +150,7 @@ public class StudentServlet extends HttpServlet {
         double height = Double.parseDouble(req.getParameter("height"));
 
         // 封装为 Student 对象
-        return new Student(name, gender, age, weight, height);
+        return new Student(id, name, gender, age, weight, height);
     }
 
     // 空值保护

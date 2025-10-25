@@ -99,10 +99,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public boolean updateStudent(Student stu) {
         if (stu == null || stu.getId() == null) {
+            System.out.println("合法性检查出问题");
             return false;
         }
 
         try {
+            System.out.println("进入service的try块");
             return dao.update(stu) > 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);

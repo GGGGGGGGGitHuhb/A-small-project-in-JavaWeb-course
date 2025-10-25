@@ -12,6 +12,9 @@
 <form method="post" action="<c:url value='/students'/>">
   <input type="hidden" name="action" value="update">
 
+  <label for="id">ID：</label>
+  <input type="text" id="id" name="id"><br>
+
   <label for="name">姓名：</label>
   <input type="text" id="name" name="name"><br>
 
